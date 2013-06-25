@@ -1,19 +1,19 @@
 <?php
 /*
-Plugin Name: TODO
-Plugin URI: TODO
-Description: TODO
+Plugin Name: Simple ads widget
+Plugin URI: https://github.com/th3mon/widget-simple-ads
+Description: Widget with adding url to image and link to page whom you whant promote.
 Version: 1.0
-Author: TODO
-Author URI: TODO
-Author Email: TODO
-Text Domain: widget-name-locale
+Author: Przemysław "th3mon" Szelenberger
+Author URI: https://github.com/th3mon
+Author Email: p.szelenberger@gmail.com
+Text Domain: simple-ads-locale
 Domain Path: /lang/
 Network: false
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2012 TODO (email@domain.com)
+Copyright 2012 Przemysław "th3mon" Szelenberger (p.szelenberger@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -30,178 +30,190 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // TODO: change 'Widget_Name' to the name of your plugin
-class Widget_Name extends WP_Widget {
+class SimpleAdsWidget extends WP_Widget {
 
-	/*--------------------------------------------------*/
-	/* Constructor
-	/*--------------------------------------------------*/
+    /*--------------------------------------------------*/
+    /* Constructor
+    /*--------------------------------------------------*/
 
-	/**
-	 * Specifies the classname and description, instantiates the widget,
-	 * loads localization files, and includes necessary stylesheets and JavaScript.
-	 */
-	public function __construct() {
+    /**
+     * Specifies the classname and description, instantiates the widget,
+     * loads localization files, and includes necessary stylesheets and JavaScript.
+     */
+    public function __construct() {
 
-		// load plugin text domain
-		add_action( 'init', array( $this, 'widget_textdomain' ) );
+        // load plugin text domain
+        add_action( 'init', array( $this, 'widget_textdomain' ) );
 
-		// Hooks fired when the Widget is activated and deactivated
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+        // Hooks fired when the Widget is activated and deactivated
+        register_activation_hook( __FILE__, array( $this, 'activate' ) );
+        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-		// TODO:	update classname and description
-		// TODO:	replace 'widget-name-locale' to be named more plugin specific. Other instances exist throughout the code, too.
-		parent::__construct(
-			'widget-name-id',
-			__( 'Widget Name', 'widget-name-locale' ),
-			array(
-				'classname'		=>	'widget-name-class',
-				'description'	=>	__( 'Short description of the widget goes here.', 'widget-name-locale' )
-			)
-		);
+        parent::__construct(
+            'simple-ads',
+            __( 'Simple ads widget', 'simple-ads-locale' ),
+            array(
+                'classname'     =>  'SimpleAdsWidget ',
+                'description'   =>  __( 'Widget with adding url to image and link to page whom you whant promote.', 'simple-ads-locale' )
+            )
+        );
 
-		// Register admin styles and scripts
-		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+        // Register admin styles and scripts
+        add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
-		// Register site styles and scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
+        // Register site styles and scripts
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 
-	} // end constructor
+    } // end constructor
 
-	/*--------------------------------------------------*/
-	/* Widget API Functions
-	/*--------------------------------------------------*/
+    /*--------------------------------------------------*/
+    /* Widget API Functions
+    /*--------------------------------------------------*/
 
-	/**
-	 * Outputs the content of the widget.
-	 *
-	 * @param	array	args		The array of form elements
-	 * @param	array	instance	The current instance of the widget
-	 */
-	public function widget( $args, $instance ) {
+    /**
+     * Outputs the content of the widget.
+     *
+     * @param   array   args        The array of form elements
+     * @param   array   instance    The current instance of the widget
+     */
+    public function widget( $args, $instance ) {
 
-		extract( $args, EXTR_SKIP );
+        extract( $args, EXTR_SKIP );
 
-		echo $before_widget;
+        echo $before_widget;
 
-		// TODO:	Here is where you manipulate your widget's values based on their input fields
+        // TODO:    Here is where you manipulate your widget's values based on their input fields
 
-		include( plugin_dir_path( __FILE__ ) . '/views/widget.php' );
+        include( plugin_dir_path( __FILE__ ) . '/views/widget.php' );
 
-		echo $after_widget;
+        echo $after_widget;
 
-	} // end widget
+    } // end widget
 
-	/**
-	 * Processes the widget's options to be saved.
-	 *
-	 * @param	array	new_instance	The previous instance of values before the update.
-	 * @param	array	old_instance	The new instance of values to be generated via the update.
-	 */
-	public function update( $new_instance, $old_instance ) {
+    /**
+     * Processes the widget's options to be saved.
+     *
+     * @param   array   new_instance    The previous instance of values before the update.
+     * @param   array   old_instance    The new instance of values to be generated via the update.
+     */
+    public function update( $new_instance, $old_instance ) {
 
-		$instance = $old_instance;
+        $instance = $old_instance;
 
-		// TODO:	Here is where you update your widget's old values with the new, incoming values
+        // TODO:    Here is where you update your widget's old values with the new, incoming values
+        $instance['title'] = $new_instance['title'];
+        $instance['image_url'] = $new_instance['image_url'];
+        $instance['link_url'] = $new_instance['link_url'];
 
-		return $instance;
+        return $instance;
 
-	} // end widget
+    } // end widget
 
-	/**
-	 * Generates the administration form for the widget.
-	 *
-	 * @param	array	instance	The array of keys and values for the widget.
-	 */
-	public function form( $instance ) {
+    /**
+     * Generates the administration form for the widget.
+     *
+     * @param   array   instance    The array of keys and values for the widget.
+     */
+    public function form( $instance ) {
 
-    	// TODO:	Define default values for your variables
-		$instance = wp_parse_args(
-			(array) $instance
-		);
+        // TODO:    Define default values for your variables
+        $instance = wp_parse_args(
+            (array) $instance,
+            array(
+                'title' => '',
+                'image_url' => '',
+                'link_url' => ''
+            )
+        );
 
-		// TODO:	Store the values of the widget in their own variable
+        // TODO:    Store the values of the widget in their own variable
+        $title = attribute_escape($instance['title']);
+        $imageUrl = $instance['image_url'];
+        $linkUrl = $instance['link_url'];
 
-		// Display the admin form
-		include( plugin_dir_path(__FILE__) . '/views/admin.php' );
+        $fieldTitle = $this->get_field_id('title');
+        $fieldImageUrl = $this->get_field_id('image_url');
+        $fieldLinkUrl = $this->get_field_id('link_url');
 
-	} // end form
+        // Display the admin form
+        include( plugin_dir_path(__FILE__) . '/views/admin.php' );
 
-	/*--------------------------------------------------*/
-	/* Public Functions
-	/*--------------------------------------------------*/
+    } // end form
 
-	/**
-	 * Loads the Widget's text domain for localization and translation.
-	 */
-	public function widget_textdomain() {
+    /*--------------------------------------------------*/
+    /* Public Functions
+    /*--------------------------------------------------*/
 
-		// TODO be sure to change 'widget-name' to the name of *your* plugin
-		load_plugin_textdomain( 'widget-name-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
+    /**
+     * Loads the Widget's text domain for localization and translation.
+     */
+    public function widget_textdomain() {
 
-	} // end widget_textdomain
+        load_plugin_textdomain( 'simple-ads-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
 
-	/**
-	 * Fired when the plugin is activated.
-	 *
-	 * @param		boolean	$network_wide	True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog.
-	 */
-	public function activate( $network_wide ) {
-		// TODO define activation functionality here
-	} // end activate
+    } // end widget_textdomain
 
-	/**
-	 * Fired when the plugin is deactivated.
-	 *
-	 * @param	boolean	$network_wide	True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
-	 */
-	public function deactivate( $network_wide ) {
-		// TODO define deactivation functionality here
-	} // end deactivate
+    /**
+     * Fired when the plugin is activated.
+     *
+     * @param       boolean $network_wide   True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog.
+     */
+    public function activate( $network_wide ) {
+        // TODO define activation functionality here
+    } // end activate
 
-	/**
-	 * Registers and enqueues admin-specific styles.
-	 */
-	public function register_admin_styles() {
+    /**
+     * Fired when the plugin is deactivated.
+     *
+     * @param   boolean $network_wide   True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
+     */
+    public function deactivate( $network_wide ) {
+        // TODO define deactivation functionality here
+    } // end deactivate
 
-		// TODO:	Change 'widget-name' to the name of your plugin
-		wp_enqueue_style( 'widget-name-admin-styles', plugins_url( 'widget-name/css/admin.css' ) );
+    /**
+     * Registers and enqueues admin-specific styles.
+     */
+    public function register_admin_styles() {
 
-	} // end register_admin_styles
+        // TODO:    Change 'widget-name' to the name of your plugin
+        wp_enqueue_style( 'simple-ads-admin-styles', plugins_url( 'widget-simple-ads/css/admin.css' ) );
 
-	/**
-	 * Registers and enqueues admin-specific JavaScript.
-	 */
-	public function register_admin_scripts() {
+    } // end register_admin_styles
 
-		// TODO:	Change 'widget-name' to the name of your plugin
-		wp_enqueue_script( 'widget-name-admin-script', plugins_url( 'widget-name/js/admin.js' ), array('jquery') );
+    /**
+     * Registers and enqueues admin-specific JavaScript.
+     */
+    public function register_admin_scripts() {
 
-	} // end register_admin_scripts
+        // TODO:    Change 'widget-name' to the name of your plugin
+        wp_enqueue_script( 'simple-ads-admin-script', plugins_url( 'widget-simple-ads/js/admin.js' ), array('jquery') );
 
-	/**
-	 * Registers and enqueues widget-specific styles.
-	 */
-	public function register_widget_styles() {
+    } // end register_admin_scripts
 
-		// TODO:	Change 'widget-name' to the name of your plugin
-		wp_enqueue_style( 'widget-name-widget-styles', plugins_url( 'widget-name/css/widget.css' ) );
+    /**
+     * Registers and enqueues widget-specific styles.
+     */
+    public function register_widget_styles() {
 
-	} // end register_widget_styles
+        // TODO:    Change 'widget-name' to the name of your plugin
+        wp_enqueue_style( 'simple-ads-styles', plugins_url( 'widget-simple-ads/css/widget.css' ) );
 
-	/**
-	 * Registers and enqueues widget-specific scripts.
-	 */
-	public function register_widget_scripts() {
+    } // end register_widget_styles
 
-		// TODO:	Change 'widget-name' to the name of your plugin
-		wp_enqueue_script( 'widget-name-script', plugins_url( 'widget-name/js/widget.js' ), array('jquery') );
+    /**
+     * Registers and enqueues widget-specific scripts.
+     */
+    public function register_widget_scripts() {
 
-	} // end register_widget_scripts
+        // TODO:    Change 'widget-name' to the name of your plugin
+        wp_enqueue_script( 'simple-ads-script', plugins_url( 'widget-simple-ads/js/widget.js' ), array('jquery') );
+
+    } // end register_widget_scripts
 
 } // end class
 
-// TODO:	Remember to change 'Widget_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Name");' ) );
+// TODO:    Remember to change 'Widget_Name' to match the class name definition
+add_action( 'widgets_init', create_function( '', 'register_widget("SimpleAdsWidget");' ) );
