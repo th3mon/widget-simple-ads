@@ -41,31 +41,8 @@ class WP_Widget_SimpleAds extends WP_Widget {
      * loads localization files, and includes necessary stylesheets and JavaScript.
      */
     public function __construct() {
-
-        // load plugin text domain
-        add_action( 'init', array( $this, 'widget_textdomain' ) );
-
-        // Hooks fired when the Widget is activated and deactivated
-        register_activation_hook( __FILE__, array( $this, 'activate' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
-
-        parent::__construct(
-            'simple-ads',
-            __( 'Simple ads widget', 'simple-ads-locale' ),
-            array(
-                'classname'     =>  'WP_Widget_SimpleAds ',
-                'description'   =>  __( 'Widget with adding url to image and link to page whom you whant promote.', 'simple-ads-locale' )
-            )
-        );
-
-        // Register admin styles and scripts
-        add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-        add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
-
-        // Register site styles and scripts
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
-
+        $widget_ops = array('classname' => 'WP_Widget_SimpleAds', 'description' => 'Widget with adding url to image and link to page whom you whant promote.');
+        $this->WP_Widget('WP_Widget_SimpleAds', 'SimpleAds', $widget_ops);
     } // end constructor
 
     /*--------------------------------------------------*/
@@ -82,11 +59,23 @@ class WP_Widget_SimpleAds extends WP_Widget {
 
         extract( $args, EXTR_SKIP );
 
+        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+        $link_url = apply_filters( 'widget_text', empty( $instance['link_url'] ) ? '' : $instance['link_url'], $instance );
+        $image_url = apply_filters( 'widget_text', empty( $instance['image_url'] ) ? '' : $instance['image_url'], $instance );
+
         echo $before_widget;
 
-        // TODO:    Here is where you manipulate your widget's values based on their input fields
+        if (!empty($title)) {
+?>
+        <h2><?php echo $title; ?></h2>
+<?php
+        }
 
-        include( plugin_dir_path( __FILE__ ) . '/views/widget.php' );
+        if (!empty($link_url) && !empty($image_url)) {
+?>
+        <a href="<?php echo $link_url; ?>"><img src="<?php echo $image_url; ?>" /></a>
+<?php
+        }
 
         echo $after_widget;
 
@@ -119,26 +108,34 @@ class WP_Widget_SimpleAds extends WP_Widget {
     public function form( $instance ) {
 
         // TODO:    Define default values for your variables
-        $instance = wp_parse_args(
-            (array) $instance,
-            array(
-                'title' => '',
-                'image_url' => '',
-                'link_url' => ''
-            )
-        );
+        $instance = wp_parse_args((array) $instance, array('title' => '', 'image_url' => '', 'link_url' => '') );
 
         // TODO:    Store the values of the widget in their own variable
         $title = attribute_escape($instance['title']);
-        $imageUrl = $instance['image_url'];
-        $linkUrl = $instance['link_url'];
-
-        $fieldTitle = $this->get_field_id('title');
-        $fieldImageUrl = $this->get_field_id('image_url');
-        $fieldLinkUrl = $this->get_field_id('link_url');
+        $image_url = $instance['image_url'];
+        $link_url = $instance['link_url'];
 
         // Display the admin form
-        include( plugin_dir_path(__FILE__) . '/views/admin.php' );
+        ?>
+            <p>
+                <label for="<?php echo $this->get_field_name('title'); ?>">
+                    Title: <input class="widefat" id="<?php echo $this->get_field_name('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+                </label>
+            </p>
+
+            <p>
+                <label for="<?php echo $this->get_field_name('image_url'); ?>">
+                    Image URL: <input class="widefat" id="<?php echo $this->get_field_name('image_url'); ?>" name="<?php echo $this->get_field_name('image_url'); ?>" type="text" value="<?php echo $image_url; ?>" />
+                </label>
+            </p>
+
+            <p>
+                <label for="<?php echo $this->get_field_name('link_url'); ?>">
+                    Link URL: <input class="widefat" id="<?php echo $this->get_field_name('link_url'); ?>" name="<?php echo $this->get_field_name('link_url'); ?>" type="text" value="<?php echo $link_url; ?>" />
+                </label>
+            </p>
+
+        <?php
 
     } // end form
 
@@ -154,64 +151,6 @@ class WP_Widget_SimpleAds extends WP_Widget {
         load_plugin_textdomain( 'simple-ads-locale', false, plugin_dir_path( __FILE__ ) . '/lang/' );
 
     } // end widget_textdomain
-
-    /**
-     * Fired when the plugin is activated.
-     *
-     * @param       boolean $network_wide   True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog.
-     */
-    public function activate( $network_wide ) {
-        // TODO define activation functionality here
-    } // end activate
-
-    /**
-     * Fired when the plugin is deactivated.
-     *
-     * @param   boolean $network_wide   True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
-     */
-    public function deactivate( $network_wide ) {
-        // TODO define deactivation functionality here
-    } // end deactivate
-
-    /**
-     * Registers and enqueues admin-specific styles.
-     */
-    public function register_admin_styles() {
-
-        // TODO:    Change 'widget-name' to the name of your plugin
-        wp_enqueue_style( 'simple-ads-admin-styles', plugins_url( 'widget-simple-ads/css/admin.css' ) );
-
-    } // end register_admin_styles
-
-    /**
-     * Registers and enqueues admin-specific JavaScript.
-     */
-    public function register_admin_scripts() {
-
-        // TODO:    Change 'widget-name' to the name of your plugin
-        wp_enqueue_script( 'simple-ads-admin-script', plugins_url( 'widget-simple-ads/js/admin.js' ), array('jquery') );
-
-    } // end register_admin_scripts
-
-    /**
-     * Registers and enqueues widget-specific styles.
-     */
-    public function register_widget_styles() {
-
-        // TODO:    Change 'widget-name' to the name of your plugin
-        wp_enqueue_style( 'simple-ads-styles', plugins_url( 'widget-simple-ads/css/widget.css' ) );
-
-    } // end register_widget_styles
-
-    /**
-     * Registers and enqueues widget-specific scripts.
-     */
-    public function register_widget_scripts() {
-
-        // TODO:    Change 'widget-name' to the name of your plugin
-        wp_enqueue_script( 'simple-ads-script', plugins_url( 'widget-simple-ads/js/widget.js' ), array('jquery') );
-
-    } // end register_widget_scripts
 
 } // end class
 
