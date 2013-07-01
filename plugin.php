@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // TODO: change 'Widget_Name' to the name of your plugin
-class SimpleAdsWidget extends WP_Widget {
+class WP_Widget_SimpleAds extends WP_Widget {
 
     /*--------------------------------------------------*/
     /* Constructor
@@ -53,7 +53,7 @@ class SimpleAdsWidget extends WP_Widget {
             'simple-ads',
             __( 'Simple ads widget', 'simple-ads-locale' ),
             array(
-                'classname'     =>  'SimpleAdsWidget ',
+                'classname'     =>  'WP_Widget_SimpleAds ',
                 'description'   =>  __( 'Widget with adding url to image and link to page whom you whant promote.', 'simple-ads-locale' )
             )
         );
@@ -216,4 +216,4 @@ class SimpleAdsWidget extends WP_Widget {
 } // end class
 
 // TODO:    Remember to change 'Widget_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("SimpleAdsWidget");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("WP_Widget_SimpleAds");' ) );
