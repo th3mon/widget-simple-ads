@@ -1,18 +1,18 @@
 <!-- This file is used to markup the administration form of the widget. -->
 <p>
-    <label for="<?php echo $fieldTitle; ?>">
-        Title: <input class="widefat" id="<?php echo $fieldTitle; ?>" name="<?php echo $fieldTitle; ?>" type="text" value="<?php echo $title; ?>" />
+    <label for="<?php echo $this->get_field_name('title'); ?>">
+        Title: <input class="widefat" id="<?php echo $this->get_field_name('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
     </label>
 </p>
 
 <p>
-    <label for="<?php echo $fieldImageUrl; ?>">
-        Image URL: <input class="widefat" id="<?php echo $fieldImageUrl; ?>" name="<?php echo $fieldImageUrl; ?>" type="text" value="<?php echo $imageUrl; ?>" />
+    <label for="<?php echo $this->get_field_name('image_url'); ?>">
+        Image URL: <input class="widefat" id="<?php echo $this->get_field_name('image_url'); ?>" name="<?php echo $this->get_field_name('image_url'); ?>" type="text" value="<?php echo $image_url; ?>" />
     </label>
 </p>
 
 <p>
-    <label for="<?php echo $fieldLinkUrl; ?>">
-        Link URL: <input class="widefat" id="<?php echo $fieldLinkUrl; ?>" name="<?php echo $fieldLinkUrl; ?>" type="text" value="<?php echo $linkUrl; ?>" />
+    <label for="<?php echo $this->get_field_name('link_url'); ?>">
+        Link URL: <input class="widefat" id="<?php echo $this->get_field_name('link_url'); ?>" name="<?php echo $this->get_field_name('link_url'); ?>" type="text" value="<?php echo $link_url; ?>" />
     </label>
 </p>
