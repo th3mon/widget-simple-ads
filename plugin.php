@@ -86,6 +86,10 @@ class WP_Widget_SimpleAds extends WP_Widget {
 
         // TODO:    Here is where you manipulate your widget's values based on their input fields
 
+        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+        $link_url = apply_filters( 'widget_text', empty( $instance['link_url'] ) ? '' : $instance['link_url'], $instance );
+        $image_url = apply_filters( 'widget_text', empty( $instance['image_url'] ) ? '' : $instance['image_url'], $instance );
+
         include( plugin_dir_path( __FILE__ ) . '/views/widget.php' );
 
         echo $after_widget;
@@ -130,12 +134,8 @@ class WP_Widget_SimpleAds extends WP_Widget {
 
         // TODO:    Store the values of the widget in their own variable
         $title = attribute_escape($instance['title']);
-        $imageUrl = $instance['image_url'];
-        $linkUrl = $instance['link_url'];
-
-        $fieldTitle = $this->get_field_id('title');
-        $fieldImageUrl = $this->get_field_id('image_url');
-        $fieldLinkUrl = $this->get_field_id('link_url');
+        $image_url = $instance['image_url'];
+        $link_url = $instance['link_url'];
 
         // Display the admin form
         include( plugin_dir_path(__FILE__) . '/views/admin.php' );
